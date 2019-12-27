@@ -200,19 +200,23 @@ outDir <- selectDirectory(caption = "Select AstroDot fine processes output direc
     }
     
   ## Statistics tests
+   
     
-    
-    dataStats <- data.frame(matrix(ncol = 3, nrow = 9))
+    dataStats <- data.frame(matrix(ncol = 6, nrow = 9))
     row_names = c("diameters", "branchs", "norm branchs", "branch lengths", "norm branch lengths", "end points",
                                           "norm end points", "junctions", "norm junctions") 
-    col_names = c("no protease/protease", "no protease/v protease x2", "no protease/v protease x3")
+    col_names = c("Wilcoxon no protease/protease", "Wilcoxon no protease/v protease x2", "Wilcoxon no protease/v protease x3",
+                  "Spearman no protease/protease", "Spearman no protease/v protease x2", "Spearman no protease/v protease x3")
     colnames(dataStats) <- col_names
     rownames(dataStats) <- row_names
     
     n = 1
     for (i in colnames(diameters)) {
       if (i != "noprot") {
+         # wilcoxon
         dataStats[1, n] <- wilcox.test(diameters$noprot, diameters[[i]], paired=TRUE)$p.value
+        # Spearman
+        dataStats[1, n+3] <- cor.test(diameters$noprot, diameters[[i]], method= "spearman")$p.value
         n <- n + 1
       }
     }
@@ -220,6 +224,8 @@ outDir <- selectDirectory(caption = "Select AstroDot fine processes output direc
     for (i in colnames(branchs)) {
       if (i != "noprot") {
         dataStats[2, n] <- wilcox.test(branchs$noprot, branchs[[i]], paired=TRUE)$p.value
+        # Spearman
+        dataStats[2, n+3] <- cor.test(branchs$noprot, branchs[[i]], method= "spearman")$p.value
         n <- n + 1
       }
     }
@@ -227,6 +233,8 @@ outDir <- selectDirectory(caption = "Select AstroDot fine processes output direc
     for (i in colnames(norm_branchs)) {
       if (i != "noprot") {
         dataStats[3, n] <- wilcox.test(norm_branchs$noprot, norm_branchs[[i]], paired=TRUE)$p.value
+        # Spearman
+        dataStats[3, n+3] <- cor.test(norm_branchs$noprot, norm_branchs[[i]], method= "spearman")$p.value
         n <- n + 1
       }
     }
@@ -235,6 +243,8 @@ outDir <- selectDirectory(caption = "Select AstroDot fine processes output direc
     for (i in colnames(branch_lengths)) {
       if (i != "noprot") {
         dataStats[4, n] <- wilcox.test(branch_lengths$noprot, branch_lengths[[i]], paired=TRUE)$p.value
+        # Spearman
+        dataStats[4, n+3] <- cor.test(branch_lengths$noprot, branch_lengths[[i]], method= "spearman")$p.value
         n <- n + 1
       }
     }
@@ -242,6 +252,8 @@ outDir <- selectDirectory(caption = "Select AstroDot fine processes output direc
     for (i in colnames(norm_branch_lengths)) {
       if (i != "noprot") {
         dataStats[5, n] <- wilcox.test(norm_branch_lengths$noprot, norm_branch_lengths[[i]], paired=TRUE)$p.value
+        # Spearman
+        dataStats[5, n+3] <- cor.test(norm_branch_lengths$noprot, norm_branch_lengths[[i]], method= "spearman")$p.value
         n <- n + 1
       }
     }
@@ -249,6 +261,8 @@ outDir <- selectDirectory(caption = "Select AstroDot fine processes output direc
     for (i in colnames(endpoints)) {
       if (i != "noprot") {
         dataStats[6, n] <- wilcox.test(endpoints$noprot, endpoints[[i]], paired=TRUE)$p.value
+        # Spearman
+        dataStats[6, n+3] <- cor.test(endpoints$noprot, endpoints[[i]], method= "spearman")$p.value
         n <- n + 1
       }
     }
@@ -256,6 +270,8 @@ outDir <- selectDirectory(caption = "Select AstroDot fine processes output direc
     for (i in colnames(norm_endpoints)) {
       if (i != "noprot") {
         dataStats[7, n] <- wilcox.test(norm_endpoints$noprot, norm_endpoints[[i]], paired=TRUE)$p.value
+        # Spearman
+        dataStats[7, n+3] <- cor.test(norm_endpoints$noprot, norm_endpoints[[i]], method= "spearman")$p.value
         n <- n + 1
       }
     }
@@ -263,6 +279,8 @@ outDir <- selectDirectory(caption = "Select AstroDot fine processes output direc
     for (i in colnames(junctions)) {
       if (i != "noprot") {
         dataStats[8, n] <- wilcox.test(junctions$noprot, junctions[[i]], paired=TRUE)$p.value
+        # Spearman
+        dataStats[8, n+3] <- cor.test(junctions$noprot, junctions[[i]], method= "spearman")$p.value
         n <- n + 1
       }
     }
@@ -270,10 +288,14 @@ outDir <- selectDirectory(caption = "Select AstroDot fine processes output direc
     for (i in colnames(norm_junctions)) {
       if (i != "noprot") {
         dataStats[9, n] <- wilcox.test(norm_junctions$noprot, norm_junctions[[i]], paired=TRUE)$p.value
+        # Spearman
+        dataStats[9, n+3] <- cor.test(norm_junctions$noprot, norm_junctions[[i]], method= "spearman")$p.value
         n <- n + 1
       }
     }
    
-    write.csv(dataStats, file = paste0(outDir,"wilcoxonStats.csv"))
+    write.csv(dataStats, file = paste0(outDir,"astroFineProcessStats.csv"))
+   
+    
     
     
