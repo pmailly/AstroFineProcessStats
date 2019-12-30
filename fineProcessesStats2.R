@@ -1,7 +1,7 @@
 ## Statistical analysis for fine processes after protease
 
 #install missing libraries
-requiredPackages = c("base", "readbulk", "dplyr", "plyr", "ggplot2", "ggpubr", "rstudioapi", "svDialogs", "stringi")
+requiredPackages = c("base", "readbulk", "dplyr", "plyr", "ggplot2", "gridExtra", "ggpubr", "rstudioapi", "svDialogs", "stringi")
 for(i in requiredPackages){
   if(!require(i,character.only = TRUE)) install.packages(i)
   library(i,character.only = TRUE)
@@ -30,10 +30,25 @@ prot2Data$File <- NULL
 
 outDir <- selectDirectory(caption = "Select AstroDot fine processes output directory", label = "Select", path = NULL)
 
-    # Diameters
-    diameters <- as.data.frame(cbind(noprot = noProtData$Diameters, prot = protData$Diameters, vprot1 = prot1Data$Diameters, vprot2 = prot2Data$Diameters))
+  # Diameters
+  diameters <- as.data.frame(cbind(noprot = noProtData$Diameters, prot = protData$Diameters, vprot1 = prot1Data$Diameters, vprot2 = prot2Data$Diameters))
+  legend <- c("no prot", "prot", "vprotx2", "vprotx3")  
+  histo <- list()
     for (i in colnames(diameters)) {
-        histo = ggplot(diameters, aes(diameters[[i]]), color="black", fill="white") +
+      histo[[i]] <- ggplot(diameters, aes_string(diameters[[i]]), color="black") +
+        theme_bw(base_size = 16) +
+        geom_histogram(aes(y= ..density..), position="identity", alpha=0.5, bins = 30) +
+        geom_density(alpha=.2, color="#FF6666", fill="#FF6666", show.legend = FALSe) +
+        labs(x = "diameters (log)", y = "density") +
+        scale_x_log10() + ylim(0, 25) +
+        geom_vline(aes(xintercept = mean(diameters[[i]], na.rm = TRUE)), color='blue', linetype='dashed', size=0.5)
+    }
+  plot_grid(plotlist = histo, labels = legend, ncol = 2, nrow = 2, label_x = 0.55, label_y = 0.95, label_size = 12)
+ 
+  
+    
+    for (i in colnames(diameters)) {
+        histo <- ggplot(diameters, aes(diameters[[i]]), color="black", fill="white") +
         theme_bw(base_size = 16) +
         theme(plot.title = element_text(hjust = 0.5, size=20, face = "bold", color = "blue"),
               axis.title.x = element_text(face="bold"),
