@@ -30,7 +30,7 @@ prot2Data$File <- NULL
 
 outDir <- selectDirectory(caption = "Select AstroDot fine processes output directory", label = "Select", path = NULL)
 
-legend <- c("no prot", "prot", "vprotx2", "vprotx3")
+legend <- c("no prot", "prot", "vprotx2", "vprotx4")
 
 #Diameters
 diameters <- as.data.frame(cbind(noprot = noProtData$Diameters, prot = protData$Diameters, vprot1 = prot1Data$Diameters, vprot2 = prot2Data$Diameters))
